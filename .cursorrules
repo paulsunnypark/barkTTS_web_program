@@ -1,0 +1,108 @@
+# 파일명: .cursorrules
+
+project:
+  name: prototype-ai-project
+  description: >
+    Python 기반 AI 모델을 빠르게 프로토타입하는 프로젝트.
+    JavaScript/HTML로 간단한 데모 UI를 구성하며,
+    필요 시 Java 연동을 고려할 수도 있음.
+
+# 1. 폴더 구조 표준화 및 자동 생성 규칙
+structure:
+  enforce_directory_structure: true
+  recommended_directories:
+    - src/ai_module
+    - src/frontend
+    - tests
+    - docs
+    - notebooks
+  create_default_files:
+    - src/ai_module/__init__.py
+    - tests/test_ai_module.py
+    - requirements.txt
+
+# 2. 환경 관리
+virtualenv:
+  use_venv: true
+  package_manager: pip
+  install_on_create: true
+  requirements_file: requirements.txt
+
+# 3. 자동 생성 템플릿 규칙
+templates:
+  python:
+    # AI 모델 로직을 간단히 자동 생성할 때 샘플 코드
+    model_inference_template: |
+      import torch
+
+      def load_model(model_path):
+          model = torch.load(model_path)
+          model.eval()
+          return model
+
+      def inference(model, input_data):
+          with torch.no_grad():
+              output = model(input_data)
+          return output
+  javascript:
+    # 단순한 프론트엔드 요청 스크립트
+    fetch_api_template: |
+      async function fetchAIResult(inputData) {
+        const response = await fetch('/api/inference', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ data: inputData })
+        });
+        const result = await response.json();
+        return result;
+      }
+
+# 4. AI 어시스턴스, 코드 리뷰 설정
+ai_rules:
+  allow_model_inference_suggestions: true
+  allow_refactor_suggestions: true
+  enforce_pep8: true
+  # 프로토타입 단계에서는 에러 로깅을 위한 기본 rule만 추가
+  error_handling:
+    on_exception: "log_and_continue"
+    # log_and_continue: 예외 발생 시 로그 출력 후 프로그램은 계속 진행
+
+# 5. 테스트 코드 자동 생성 규칙
+tests:
+  auto_generate_pytest: true
+  # pull request 시 자동으로 테스트 실행
+  run_tests_on_pr: true
+
+# 6. 보안 및 환경변수 관리
+security:
+  ignore_patterns:
+    - '*.env'
+    - 'keys/*'
+  
+# 민감 정보 추출 시 경고
+  sensitive_keywords:
+    - 'API_KEY'
+    - 'SECRET_KEY'
+  on_detect_sensitive_info: "warn"
+
+# 7. 간단한 협업/알림 설정
+notifications:
+  # 프로토타입 단계에서는 이메일/간단 Slack 알림만 적용
+  email_on_error: "paulsunnypark@gmail.com"
+  
+# 8. 문서화 자동화
+documentation:
+  # 코드를 분석해 README나 API 문서 스크립트를 초안으로 생성
+  auto_generate_readme: true
+
+# 9. 라이선스
+license:
+  allowed_licenses:
+    - MIT
+    - Apache-2.0
+    - BSD-3-Clause
+
+# 10. 프로토타입 최적화
+profiling:
+  # 간단한 프로파일링만
+  enable_cprofile_suggestions: true
